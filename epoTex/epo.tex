@@ -1,0 +1,262 @@
+% Use only LaTeX2e, calling the article.cls class and 12-point type.
+
+\documentclass[12pt]{article}
+
+% Users of the {thebibliography} environment or BibTeX should use the
+% scicite.sty package, downloadable from *Science* at
+% http://www.sciencemag.org/authors/preparing-manuscripts-using-latex 
+% This package should properly format in-text
+% reference calls and reference-list numbers.
+
+\usepackage{scicite}
+
+\usepackage{times}
+
+% The preamble here sets up a lot of new/revised commands and
+% environments.  It's annoying, but please do *not* try to strip these
+% out into a separate .sty file (which could lead to the loss of some
+% information when we convert the file to other formats).  Instead, keep
+% them in the preamble of your main LaTeX source file.
+
+
+% The following parameters seem to provide a reasonable page setup.
+
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm 
+\textheight 21cm
+\footskip 1.0cm
+
+
+%The next command sets up an environment for the abstract to your paper.
+
+\newenvironment{sciabstract}{%
+\begin{quote} \bf}
+{\end{quote}}
+
+
+
+% Include your paper's title here
+
+\title{Math Modeling for the Erythropoietin Receptor} 
+
+
+% Place the author information here.  Please hand-code the contact
+% information and notecalls; do *not* use \footnote commands.  Let the
+% author contact information appear immediately below the author names
+% as shown.  We would also prefer that you don't change the type-size
+% settings shown here.
+
+\author
+{Gabriel Toban$^{1\ast}$ \\
+\\
+\normalsize{$^{1}$Department of Computational Science, Middle Tennessee State University,}\\
+\normalsize{1301 E Main St, Murfreesboro, TN 37132, USA}\\
+\\
+\normalsize{$^\ast$Gabriel Toban; E-mail:  gst2d@mtmai.mtsu.edu.}
+}
+
+% Include the date command, but leave its argument blank.
+
+\date{}
+
+
+
+%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
+
+
+
+\begin{document} 
+
+% Double-space the manuscript.
+
+\baselineskip24pt
+
+% Make the title.
+
+\maketitle 
+
+
+
+% Place your abstract within the special {sciabstract} environment.
+
+\begin{sciabstract}
+ The Monte Carlo Markov Chain method, MCMC Hammer, is used to estimate the value of parameters in mathematical models. The Sobol Method is used to measure the sensitivity of parameters in mathematical models. V. Becker, \textit{et al}., \cite{beck} created a mathematical Erythrpoietin Receptor (EpoR) model based on the characteristics of similar receptors. We used the MCMC Hammer and Sobol methods for their model. The MCMC Hammer method allowed the model to provide on average 56.11\% coverage of the experimental data. The Sobol method found that the amount of degraded Epo released to extracellular space has the most effect on the EpoR model.
+\end{sciabstract}
+
+
+
+% In setting up this template for *Science* papers, we've used both
+% the \section* command and the \paragraph* command for topical
+% divisions.  Which you use will of course depend on the type of paper
+% you're writing.  Review Articles tend to have displayed headings, for
+% which \section* is more appropriate; Research Articles, when they have
+% formal topical divisions at all, tend to signal them with bold text
+% that runs into the paragraph, for which \paragraph* is the right
+% choice.  Either way, use the asterisk (*) modifier, as shown, to
+% suppress numbering.
+
+\section*{Introduction}
+
+Methods for the creation and analysis of mathematical models can vary greatly. When a particular problem is identified with a method, the fix for that problem can cause a different problem. Testing the solutions to a model with different methods can provide alternative approaches to the real life application of the model.
+
+Systems biology can use mathematical models to better understand diseases and the effects of drugs \cite{beck} \cite{bach}. V. Becker, \textit{et al}., \cite{beck} created a mathematical model to understand the factors that allow erythropoietin receptors (EpoR) to handle dynamic ranges of ligand concentrations. 
+
+The model was built and analyzed\cite{beck} using a MATLAB toolbox known as PottersWheel\cite{pott}. We used an alternative approach to find the parameters and sensitivity analysis.
+
+\section*{Background}
+
+Erythroproietin (Epo) is a glycoprotein hormone that stimulates blood cell growth \cite{epo}. The erythropoietin (EpoR) receptor is a cell surface receptor that helps cells respond to their environment \cite{bach}. Epo resides in the medium around the cell \cite{bach}. EpoR on the cell surface binds with Epo in the medium \cite{bach}. When Epo and EpoR bind (Epo-EpoR), the Epo-EpoR can degrade and move into the cell or move outside the cell \cite{bach}. There are many factors that control this process which make the model. Experiments can be run to measure the concentrations of Epo in the medium, on the surface, and in the cell \cite{bach}. 
+
+Streptavidin (SAv) is a protein that also binds with the EpoR \cite{epo}. It has the same interactions with EpoR that Epo has. Experiments can be run to measure the concentrations of SAv in the medium, on the surface, and in the cell \cite{bach}. 
+
+ Monte Carlo methods use the Law of Large Numbers and random sampling to solve large problems. Markov Chains define the probability of any node in a sequence to be dependent only on it's immediate predecessor. Monte Carlo Markov Chains use Markov Chains to pick the next random sample. The Monte Carlo Markov Chain method, MCMC Hammer, is "an MIT licensed pure-Python implementation of Goodman \& Weare’s Affine Invariant Markov chain Monte Carlo (MCMC) Ensemble sampler \cite{good}" \cite{emcee}.
+
+\section*{Methods}
+
+V. Becker, \textit{et al}., \cite{beck} used 2 systems of ordinary differential equations (the "core model" and "auxiliary model") with 12 elements (6 per system) and 12 parameters (8 shared between the 2 systems). 2 of the initial values were also solved for (Epo concentration and SAv concentration).
+
+Experimental data was collected from the graphs of Epo and SAv in medium, on the surface, and in the cell from  V. Becker, \textit{et al}., \cite{beck}. All data was collected using WebPlotDigitizer. Initially, 30 points were gathered from the Epo graphs and 5 points from the SAv graphs. The Epo graphs were plotted for 300 minutes while the SAv graphs were ploted for 60 minutes. The 5 points from the SAv graphs were from 0, 15, 30, 45, and 60 minutes. To duplicate the model, points from the same time steps were used from the original 30 points gathered from Epo graphs. 
+
+All programming was completed in an Anaconda Jupyter notebook using a python kernel. 
+
+In order to implement the MCMC Hammer method \cite{emcee}, the Ipython parallel package was used with 4 parallel processes. Log likelihood, log prior, log posterior, and maximize posterior functions were manually coded. 
+
+Log prior used ranges for all parameters defined in by V. Becker, \textit{et al}., \cite{beck}. The Epo and SAv ranges were defined as +- 10\% of experimental values. Since only one set of experimental data was plotted, the experimental values were set to be the found values after V. Becker, \textit{et al}., \cite{beck} solved for them. 
+
+The maximize posterior requires an initial guess. While the model was being built, the initial guess was set to the found values found by V. Becker, \textit{et al}., \cite{beck}. When the parameters were actually being solved for, the initial guess was set to be 10\%  greater than the minimum value in the range.
+
+The MCMC Hammer method \cite{emcee} was run using the following parameter values:
+\\
+\\
+\begin{center}
+\begin{tabular}{r|l}
+chains & 36 \\
+steps & 3000 \\
+burn & 500   \\
+\end{tabular}
+\end{center}
+
+The Sobol Method was run using 333 steps.
+
+All calculations were performed on a computer with the following specifications:\\
+\\
+\begin{tabular}{r|l}
+Processor& Intel(R) Core(TM) i5-2450M CPU @ 2.50GHz\\
+RAM& 6.00 GB \\
+System Type& 64-bit\\
+Cores& 2\\
+Logical Processors& 4\\
+\end{tabular}
+\\
+\\
+The version of every programming language involved is listed below:
+\\ \\
+\begin{tabular}{r|l}
+WebPlotDigitizer& 3.8\\
+Python& 2.7.12\\
+Anaconda& 4.2.0 (32 bit)\\
+Jupyter-client&  4.4.0
+\end{tabular}
+\\ \\
+
+\section*{Results}
+
+In implementing the MCMC Hammer method, the following results were produced: estimations from maximize posterior, acceptance percent, sample plots, uncertainty plots, residual plots, estimated values from MCMC Hammer, coverage percentages, and correlation plots. I have only presented the estimated values from MCMC Hammer and coverage percentages.
+
+The estimated values from MCMC Hammer \cite{emcee} are:
+
+\begin{tabular}{r|p{8cm}|l }
+\hline
+Estimated m& standard deviation percentage& 0.900000\\
+\hline
+Estimated kt&ligand independent endocytosis& 197.801936\\
+\hline
+Estimated kdi&Degraded Epo is retained in intracellular
+compartments& 598.511304\\
+\hline
+Estimated kde&Degraded Epo is released to the extracellular
+space in an inactive state & 340.547344\\
+\hline
+Estimated kon\verb|_|SAv&SAv association rate& 25.609470\\
+\hline
+Estimated kex\verb|_|SAv&EpoR and SAv recycle back to the plasma membrane& 171.051743\\
+\hline
+Estimated kon&Epo association rate& 54.804303\\
+\hline
+Estimated ke&Epo-EpoR endocytosis& 230.709304\\
+\hline
+Estimated kex&EpoR and Epo recycle back to the plasma membrane& 125.883640\\
+\hline
+Estimated Epo&Epo Initial Concentration& 2026.092511\\
+\hline
+Estimated SAv&SAv Initial Concetration& 1013.350835\\
+\hline
+\end{tabular}
+\\
+
+The coverage percentages are:\\
+
+
+\begin{tabular}{r|l}
+Coverage EpoInCells & 83.33\\
+Coverage EpoInMedium & 93.33\\
+Coverage EpoOnSurface & 10.00\\
+Coverage SAvInCells & 63.33\\
+Coverage SAvInMedium & 76.67\\
+Coverage SAvOnSurface & 10.00\\
+Coverage Average & 56.11 \\
+\end{tabular} \\ \\
+
+The sensitivity ranks from the Sobol method are as follows: \\
+\\
+\begin{center}
+\begin{tabular}{r|l}
+01& kde\\
+02& Epo\\
+03& SAv\\
+04& kdi\\
+05& kt\\
+06& kon\\
+07& ke\\
+08& kex\verb|_|Sav\\
+09& kex\\
+10& kon\verb|_|SAv\\
+
+\end{tabular}
+\end{center}
+
+\section*{Conclusions}
+
+There are two conclusions that should be considered: the most sensitive parameters and the observed versus simulated concentration levels. The most sensitive parameter is ligand independent endocytosis. The concentration of Epo/SAv in the cells was simulated to be higher than the concentration of observed Epo/SAv in cells. Therefore, the act of pulling matter into the cell could have been the cause of over prediction of the concentrations in the cells. 
+
+The Epo and SAv concentrations were not tested with different concentration levels. This lack of testing may have lead to these initial conditions being one of the most sensitive. It does follow that the concentration of Epo/SAv to start would have a strong effect on the amount of Epo/SAv over time.
+
+Finally, the second most sensitive parameter is the degraded Epo retained in intracellular compartments. This also lends to the idea that the amount of Epo in the cells remains high. The amount of SAv in the cells was less, but SAv did not have a parameter that represented the amount of SAv retained in intracellular departments.
+\clearpage
+\bibliography{epo}
+
+\bibliographystyle{Science}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
